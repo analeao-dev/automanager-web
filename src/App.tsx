@@ -5,7 +5,7 @@ function App() {
 	return (
 		<>
 			<RouterProvider router={router} />
-			<h1 className='text-3xl font-bold underline'>AutoManager 🚗</h1>
+			{/* <h1 className='text-3xl font-bold underline'>AutoManager 🚗</h1> */}
 		</>
 	);
 }
