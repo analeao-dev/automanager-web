@@ -79,7 +79,7 @@ function Vehicle() {
 			<Card>
 				<Card.Title>
 					<Car size={34} />
-					<span className='text-2xl font-semibold'>Editar Veículo</span>
+					<span className='text-xl font-semibold'>Editar Veículo</span>
 				</Card.Title>
 				<Card.Body>
 					{alertMessage && <div className={`alert alert-${alertType} mb-4`}>{alertMessage}</div>}

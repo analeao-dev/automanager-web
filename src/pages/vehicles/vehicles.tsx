@@ -46,7 +46,7 @@ function Vehicles() {
 			<Card>
 				<Card.Title>
 					<Car size={34} />
-					<span className='text-2xl font-semibold'>
+					<span className='text-xl font-semibold'>
 						Veículos encontrados: {vehicles?.totalCount}
 					</span>
 				</Card.Title>
@@ -74,7 +74,15 @@ function Vehicles() {
 												<td>{vehicle.year}</td>
 												<td>{vehicle.brand}</td>
 												<td>{vehicle.plate}</td>
-												<td>{vehicle.type}</td>
+												<td>
+													{vehicle.type === 1 ? (
+														<div className='badge badge-soft badge-primary'>Motocicleta</div>
+													) : vehicle.type === 2 ? (
+														<div className='badge badge-soft badge-primary'>Carro</div>
+													) : (
+														<div className='badge badge-soft badge-primary'>Caminhão</div>
+													)}
+												</td>
 												<td>{formattedDate(vehicle.lastMaintenanceDate)}</td>
 												<td>{vehicle.mileage} km</td>
 												<td>

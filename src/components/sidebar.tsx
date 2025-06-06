@@ -10,7 +10,7 @@ function Sidebar() {
 					className={({ isActive }) => (isActive ? "bg-red-100 text-primary" : "")}
 				>
 					<Plus />
-					Cadastro
+					<span className='font-semibold'>Cadastro</span>
 				</NavLink>
 			</li>
 			<li>
@@ -19,7 +19,7 @@ function Sidebar() {
 					className={({ isActive }) => (isActive ? "bg-red-100 text-primary" : "")}
 				>
 					<List />
-					Vehicles
+					<span className='font-semibold'>Veículos</span>
 				</NavLink>
 			</li>
 		</ul>

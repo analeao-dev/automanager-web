@@ -15,7 +15,7 @@ function Register() {
 	const [lastMaintenanceDate, setLastMaintenanceDate] = useState<string>("");
 	const [loading, setLoading] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
-	const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("success");
+	const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
@@ -32,6 +32,14 @@ function Register() {
 			image,
 			lastMaintenanceDate,
 		};
+
+		if (!newVehicle.type || !newVehicle.plate || !newVehicle.brand || !newVehicle.model) {
+			setLoading(false);
+			setAlertMessage("Preencha os campos obrigatórios");
+			setAlertType("error");
+			setTimeout(() => setAlertMessage(""), 2000);
+			return;
+		}
 
 		try {
 			const response = await createVehicle(newVehicle);
@@ -54,19 +62,22 @@ function Register() {
 			<Card>
 				<Card.Title>
 					<Car size={34} />
-					<span className='text-2xl font-semibold'>Formulário de Registro</span>
+					<span className='text-xl font-semibold'>Formulário de Registro</span>
 				</Card.Title>
 				<Card.Body>
 					{alertMessage && <Alert message={alertMessage} type={alertType} />}
 					<form onSubmit={handleSubmit}>
 						<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 							<div className='flex flex-col'>
-								<label htmlFor='type'>Tipo do veículo</label>
+								<label htmlFor='type' className='font-semibold'>
+									Tipo do veículo <span className='text-red-600'>*</span>
+								</label>
 								<select
 									id='type'
 									className='select select-bordered w-full'
 									value={type}
 									onChange={(e) => setType(Number(e.target.value))}
+									required
 								>
 									<option value='0' disabled>
 										Selecione o tipo
@@ -78,29 +89,37 @@ function Register() {
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='plate'>Placa</label>
+								<label htmlFor='plate' className='font-semibold'>
+									Placa <span className='text-red-600'>*</span>
+								</label>
 								<input
 									id='plate'
 									type='text'
 									className='input w-full'
 									value={plate}
 									onChange={(e) => setPlate(e.target.value)}
+									required
 								/>
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='brand'>Marca</label>
+								<label htmlFor='brand' className='font-semibold'>
+									Marca <span className='text-red-600'>*</span>
+								</label>
 								<input
 									id='brand'
 									type='text'
 									className='input w-full'
 									value={brand}
 									onChange={(e) => setBrand(e.target.value)}
+									required
 								/>
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='model'>Modelo</label>
+								<label htmlFor='model' className='font-semibold'>
+									Modelo <span className='text-red-600'>*</span>
+								</label>
 								<input
 									id='model'
 									type='text'
@@ -111,7 +130,9 @@ function Register() {
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='year'>Ano</label>
+								<label htmlFor='year' className='font-semibold'>
+									Ano
+								</label>
 								<input
 									id='year'
 									type='text'
@@ -122,7 +143,9 @@ function Register() {
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='mileage'>Quilometragem</label>
+								<label htmlFor='mileage' className='font-semibold'>
+									Quilometragem
+								</label>
 								<input
 									id='mileage'
 									type='text'
@@ -133,7 +156,9 @@ function Register() {
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='image'>Imagem</label>
+								<label htmlFor='image' className='font-semibold'>
+									Imagem
+								</label>
 								<input
 									id='image'
 									type='file'
@@ -144,7 +169,9 @@ function Register() {
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='lastMaintenanceDate'>Última data de manutanção</label>
+								<label htmlFor='lastMaintenanceDate' className='font-semibold'>
+									Última data de manutanção
+								</label>
 								<input
 									id='lastMaintenanceDate'
 									type='date'
