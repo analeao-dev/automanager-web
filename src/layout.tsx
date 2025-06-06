@@ -7,7 +7,7 @@ function Layout() {
 		<div className='drawer lg:drawer-open drawer-overlay'>
 			<input id='main-drawer' type='checkbox' className='drawer-toggle' />
 			<div className='drawer-content'>
-				<main>
+				<main className='p-10'>
 					<Outlet />
 				</main>
 				<label htmlFor='main-drawer' className='btn btn-primary drawer-button lg:hidden'>

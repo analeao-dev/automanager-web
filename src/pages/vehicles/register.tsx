@@ -1,10 +1,54 @@
 import { Car } from "lucide-react";
+import React, { useState } from "react";
+import { createVehicle } from "../../services/vehicleService";
+import { Alert } from "../../components/alert";
 
 function Register() {
+	const [type, setType] = useState<number>(0);
+	const [plate, setPlate] = useState<string>("");
+	const [brand, setBrand] = useState<string>("");
+	const [model, setModel] = useState<string>("");
+	const [year, setYear] = useState<number>(0);
+	const [mileage, setMileage] = useState<number>(0);
+	const [image, setImage] = useState<string>("");
+	const [lastMaintenanceDate, setLastMaintenanceDate] = useState<string>("");
+	const [loading, setLoading] = useState(false);
+	const [alertMessage, setAlertMessage] = useState("");
+	const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("success");
+
+	async function handleSubmit(e: React.FormEvent) {
+		e.preventDefault();
+
+		setLoading(true);
+
+		const newVehicle = {
+			type,
+			plate,
+			brand,
+			model,
+			year: Number(year),
+			mileage: Number(mileage),
+			image,
+			lastMaintenanceDate,
+		};
+
+		try {
+			const response = await createVehicle(newVehicle);
+			setAlertMessage(response.message);
+			setAlertType("success");
+			setTimeout(() => setAlertMessage(""), 2000);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	}
+
 	return (
-		<div className='p-4'>
-			<header>
-				<h1>Registro de veículos</h1>
+		<div>
+			<header className='mb-8'>
+				<h1 className='text-primary font-semibold text-3xl'>Registro de veículos</h1>
+				<p>Registre um novo veículo no sistema</p>
 			</header>
 			<div className='flex justify-center'>
 				<div className='card card-xl bg-base-100 shadow-sm overflow-hidden'>
@@ -13,11 +57,16 @@ function Register() {
 						<span className='text-2xl font-semibold'>Formulário de Registro</span>
 					</div>
 					<div className='card-body'>
-						<form action='' className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+						<form onSubmit={handleSubmit} className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 							<div className='flex flex-col'>
-								<label htmlFor=''>Tipo do veículo</label>
-								<select id='tipo' className='select select-bordered'>
-									<option disabled selected>
+								<label htmlFor='type'>Tipo do veículo</label>
+								<select
+									id='type'
+									className='select select-bordered'
+									value={type}
+									onChange={(e) => setType(Number(e.target.value))}
+								>
+									<option value='0' disabled>
 										Selecione o tipo
 									</option>
 									<option value='1'>Motocicleta</option>
@@ -27,41 +76,95 @@ function Register() {
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor=''>Placa</label>
-								<input type='text' className='input' />
+								<label htmlFor='plate'>Placa</label>
+								<input
+									id='plate'
+									type='text'
+									className='input'
+									value={plate}
+									onChange={(e) => setPlate(e.target.value)}
+								/>
 							</div>
+
 							<div className='flex flex-col'>
-								<label htmlFor=''>Marca</label>
-								<input type='text' className='input' />
+								<label htmlFor='brand'>Marca</label>
+								<input
+									id='brand'
+									type='text'
+									className='input'
+									value={brand}
+									onChange={(e) => setBrand(e.target.value)}
+								/>
 							</div>
+
 							<div className='flex flex-col'>
-								<label htmlFor=''>Modelo</label>
-								<input type='text' className='input' />
+								<label htmlFor='model'>Modelo</label>
+								<input
+									id='model'
+									type='text'
+									className='input'
+									value={model}
+									onChange={(e) => setModel(e.target.value)}
+								/>
 							</div>
+
 							<div className='flex flex-col'>
-								<label htmlFor=''>Ano</label>
-								<input type='text' className='input' />
+								<label htmlFor='year'>Ano</label>
+								<input
+									id='year'
+									type='text'
+									className='input'
+									value={year}
+									onChange={(e) => setYear(Number(e.target.value))}
+								/>
 							</div>
+
 							<div className='flex flex-col'>
-								<label htmlFor=''>Quilometragem</label>
-								<input type='text' className='input' />
+								<label htmlFor='mileage'>Quilometragem</label>
+								<input
+									id='mileage'
+									type='text'
+									className='input'
+									value={mileage}
+									onChange={(e) => setMileage(Number(e.target.value))}
+								/>
 							</div>
+
 							<div className='flex flex-col'>
-								<label htmlFor=''>Imagem</label>
-								<input type='file' className='input' />
+								<label htmlFor='image'>Imagem</label>
+								<input
+									id='image'
+									type='file'
+									className='input'
+									value={image}
+									onChange={(e) => setImage(e.target.value)}
+								/>
 							</div>
+
 							<div className='flex flex-col'>
-								<label htmlFor=''>Última data de manutanção</label>
-								<input type='date' className='input' />
+								<label htmlFor='lastMaintenanceDate'>Última data de manutanção</label>
+								<input
+									id='lastMaintenanceDate'
+									type='date'
+									className='input'
+									value={lastMaintenanceDate}
+									onChange={(e) => setLastMaintenanceDate(e.target.value)}
+								/>
 							</div>
+
+							<button disabled={loading} type='submit' className='btn btn-primary col-span-2 mt-4'>
+								{loading ? (
+									<span className='loading loading-dots loading-md'></span>
+								) : (
+									<span>Registrar</span>
+								)}
+								{/* <span>Registrar</span> */}
+							</button>
 						</form>
-						<div className='card-actions justify-end'>
-							<div className='badge badge-outline'>Fashion</div>
-							<div className='badge badge-outline'>Products</div>
-						</div>
 					</div>
 				</div>
 			</div>
+			{alertMessage && <Alert message={alertMessage} type={alertType} />}
 		</div>
 	);
 }
