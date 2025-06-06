@@ -3,8 +3,10 @@
 **AutoManager** é uma aplicação web desenvolvida em **React + TypeScript** para gerenciamento de veículos. O projeto permite cadastro, listagem, visualização e edição de automóveis.
 
 ## 🖼️ Demonstração
-
-![AutoManager Logo](./public/logo.png) <!-- Atualize o caminho se necessário -->
+<div style="display: flex; gap: 10px;">
+  <img src="./public/tela-1.png" alt="Exemplo imagem" width="400">
+  <img src="./public/tela-2.png" alt="Exemplo imagem" width="400">
+</div>
 
 ## 🚀 Funcionalidades
 
@@ -27,7 +29,7 @@
 ## 📦 Instalação
 
 ```bash
-git clone https://github.com/analeao-dev/AutoManager.git
+git clone https://github.com/analeao-dev/automanager-web.git
 cd AutoManager
 npm install
 npm run dev
