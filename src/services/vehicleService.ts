@@ -3,10 +3,24 @@ import type { PagedRequest } from "../@types/requests/pagedResquest";
 import type { Response } from "../@types/responses/response";
 import type { PagedResponse } from "../@types/responses/pagedResponse";
 import type { Vehicle } from "../@types/vehicle";
+import type { UpdateVehicleRequest } from "../@types/requests/vehicles/updateVehicleRequest";
+import type { GetVehicleByIdRequest } from "../@types/requests/vehicles/getVehicleByIdRequest";
+
 import api from "./api";
 
 export async function createVehicle(request: CreateVehicleRequest): Promise<Response<Vehicle>> {
 	const response = await api.post<Response<Vehicle>>("/api/v1/vehicles", request);
+	return response.data;
+}
+
+export async function updateVehicle(request: UpdateVehicleRequest): Promise<Response<Vehicle>> {
+	console.log(request);
+	const response = await api.put<Response<Vehicle>>(`/api/v1/vehicles/${request.id}`, request);
+	return response.data;
+}
+
+export async function getVehicleById(request: GetVehicleByIdRequest): Promise<Response<Vehicle>> {
+	const response = await api.get<Response<Vehicle>>(`/api/v1/vehicles/${request.id}`);
 	return response.data;
 }
 

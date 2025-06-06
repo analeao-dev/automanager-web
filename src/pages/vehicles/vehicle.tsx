@@ -1,10 +1,11 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Car } from "lucide-react";
-import React, { useState } from "react";
-import { createVehicle } from "../../services/vehicleService";
-import { Alert } from "../../components/alert";
 import Card from "../../components/card";
+import { getVehicleById, updateVehicle } from "../../services/vehicleService";
 
-function Register() {
+function Vehicle() {
+	const { id } = useParams();
 	const [type, setType] = useState<number>(0);
 	const [plate, setPlate] = useState<string>("");
 	const [brand, setBrand] = useState<string>("");
@@ -17,12 +18,38 @@ function Register() {
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("success");
 
+	useEffect(() => {
+		async function fetchVehicle() {
+			if (!id) return;
+			setLoading(true);
+			try {
+				const vehicle = await getVehicleById({ id: Number(id) });
+
+				setType(vehicle.data.type);
+				setPlate(vehicle.data.plate);
+				setBrand(vehicle.data.brand);
+				setModel(vehicle.data.model);
+				setYear(vehicle.data.year);
+				setMileage(vehicle.data.mileage);
+				setImage(vehicle.data.image);
+				setLastMaintenanceDate(vehicle.data.lastMaintenanceDate);
+			} catch (error) {
+				console.log(error);
+				setAlertMessage("Erro ao carregar veículo");
+				setAlertType("error");
+			} finally {
+				setLoading(false);
+			}
+		}
+		fetchVehicle();
+	}, [id]);
+
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-
 		setLoading(true);
 
-		const newVehicle = {
+		const updatedVehicle = {
+			id: Number(id),
 			type,
 			plate,
 			brand,
@@ -34,12 +61,14 @@ function Register() {
 		};
 
 		try {
-			const response = await createVehicle(newVehicle);
+			const response = await updateVehicle(updatedVehicle);
 			setAlertMessage(response.message);
 			setAlertType("success");
 			setTimeout(() => setAlertMessage(""), 2000);
 		} catch (error) {
 			console.log(error);
+			setAlertMessage("Erro ao atualizar veículo");
+			setAlertType("error");
 		} finally {
 			setLoading(false);
 		}
@@ -48,16 +77,16 @@ function Register() {
 	return (
 		<div>
 			<header className='mb-8'>
-				<h1 className='text-primary font-semibold text-3xl'>Registro de veículos</h1>
-				<p>Registre um novo veículo no sistema</p>
+				<h1 className='text-primary font-semibold text-3xl'>Informações do Veículo</h1>
+				<p>Gerencie e atualize informações sobre o veículo</p>
 			</header>
 			<Card>
 				<Card.Title>
 					<Car size={34} />
-					<span className='text-2xl font-semibold'>Formulário de Registro</span>
+					<span className='text-2xl font-semibold'>Editar Veículo</span>
 				</Card.Title>
 				<Card.Body>
-					{alertMessage && <Alert message={alertMessage} type={alertType} />}
+					{alertMessage && <div className={`alert alert-${alertType} mb-4`}>{alertMessage}</div>}
 					<form onSubmit={handleSubmit}>
 						<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 							<div className='flex flex-col'>
@@ -114,7 +143,7 @@ function Register() {
 								<label htmlFor='year'>Ano</label>
 								<input
 									id='year'
-									type='text'
+									type='number'
 									className='input w-full'
 									value={year}
 									onChange={(e) => setYear(Number(e.target.value))}
@@ -125,7 +154,7 @@ function Register() {
 								<label htmlFor='mileage'>Quilometragem</label>
 								<input
 									id='mileage'
-									type='text'
+									type='number'
 									className='input w-full'
 									value={mileage}
 									onChange={(e) => setMileage(Number(e.target.value))}
@@ -133,10 +162,10 @@ function Register() {
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='image'>Imagem</label>
+								<label htmlFor='image'>Imagem (URL)</label>
 								<input
 									id='image'
-									type='file'
+									type='text'
 									className='input w-full'
 									value={image}
 									onChange={(e) => setImage(e.target.value)}
@@ -144,7 +173,7 @@ function Register() {
 							</div>
 
 							<div className='flex flex-col'>
-								<label htmlFor='lastMaintenanceDate'>Última data de manutanção</label>
+								<label htmlFor='lastMaintenanceDate'>Última data de manutenção</label>
 								<input
 									id='lastMaintenanceDate'
 									type='date'
@@ -156,11 +185,11 @@ function Register() {
 						</div>
 
 						<div className='flex justify-end'>
-							<button disabled={loading} type='submit' className='btn btn-primary mt-4'>
+							<button disabled={loading} type='submit' className='btn btn-primary col-span-2 mt-4'>
 								{loading ? (
 									<span className='loading loading-dots loading-md'></span>
 								) : (
-									<span>Registrar</span>
+									<span>Salvar</span>
 								)}
 							</button>
 						</div>
@@ -171,4 +200,4 @@ function Register() {
 	);
 }
 
-export default Register;
+export default Vehicle;

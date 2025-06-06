@@ -4,7 +4,7 @@ interface AlertProps {
 }
 export function Alert({ message, type }: AlertProps) {
 	return (
-		<div role='alert' className={`alert alert-${type} w-80 m-auto my-4`}>
+		<div role='alert' className={`alert alert-${type} w-full m-auto my-4`}>
 			<svg
 				xmlns='http://www.w3.org/2000/svg'
 				className='h-6 w-6 shrink-0 stroke-current'
