@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Vehicle } from "../../@types/vehicle";
-import { getVehicles } from "../../services/vehicleService";
+import { deleteVehicle, getVehicles } from "../../services/vehicleService";
 import type { PagedRequest } from "../../@types/requests/pagedResquest";
 import type { PagedResponse } from "../../@types/responses/pagedResponse";
 import { formattedDate } from "../../utils/formattedDate";
@@ -26,6 +26,16 @@ function Vehicles() {
 		};
 		fetchVehicles();
 	}, [pagedRequest]);
+
+	async function handleDeleteVehicle(id: number) {
+		try {
+			await deleteVehicle({ id: Number(id) });
+			const response = await getVehicles(pagedRequest);
+			setVehicles(response);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	return (
 		<div>
@@ -89,6 +99,7 @@ function Vehicles() {
 															className='btn btn-xs btn-ghost'
 															type='button'
 															title='Excluir veículo'
+															onClick={() => handleDeleteVehicle(vehicle.id)}
 														>
 															<Trash className='text-red-600' size={18} />
 														</button>

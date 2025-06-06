@@ -7,6 +7,7 @@ import type { UpdateVehicleRequest } from "../@types/requests/vehicles/updateVeh
 import type { GetVehicleByIdRequest } from "../@types/requests/vehicles/getVehicleByIdRequest";
 
 import api from "./api";
+import type { DeleteVehicleRequest } from "../@types/requests/vehicles/deleteVehicleRequest";
 
 export async function createVehicle(request: CreateVehicleRequest): Promise<Response<Vehicle>> {
 	const response = await api.post<Response<Vehicle>>("/api/v1/vehicles", request);
@@ -26,5 +27,10 @@ export async function getVehicleById(request: GetVehicleByIdRequest): Promise<Re
 
 export async function getVehicles(request: PagedRequest): Promise<PagedResponse<Vehicle[]>> {
 	const response = await api.get<PagedResponse<Vehicle[]>>("/api/v1/vehicles", { params: request });
+	return response.data;
+}
+
+export async function deleteVehicle(request: DeleteVehicleRequest): Promise<Response<Vehicle>> {
+	const response = await api.delete<Response<Vehicle>>(`/api/v1/vehicles/${request.id}`);
 	return response.data;
 }

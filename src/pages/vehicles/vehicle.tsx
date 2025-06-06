@@ -19,7 +19,7 @@ function Vehicle() {
 	const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("success");
 
 	useEffect(() => {
-		async function fetchVehicle() {
+		async function getVehicle() {
 			if (!id) return;
 			setLoading(true);
 			try {
@@ -35,13 +35,11 @@ function Vehicle() {
 				setLastMaintenanceDate(vehicle.data.lastMaintenanceDate);
 			} catch (error) {
 				console.log(error);
-				setAlertMessage("Erro ao carregar veículo");
-				setAlertType("error");
 			} finally {
 				setLoading(false);
 			}
 		}
-		fetchVehicle();
+		getVehicle();
 	}, [id]);
 
 	async function handleSubmit(e: React.FormEvent) {
@@ -67,8 +65,6 @@ function Vehicle() {
 			setTimeout(() => setAlertMessage(""), 2000);
 		} catch (error) {
 			console.log(error);
-			setAlertMessage("Erro ao atualizar veículo");
-			setAlertType("error");
 		} finally {
 			setLoading(false);
 		}
