@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Car } from "lucide-react";
 import Card from "../../components/card";
 import { getVehicleById, updateVehicle } from "../../services/vehicleService";
+import STATES from "../../utils/states";
 
 function Vehicle() {
 	const { id } = useParams();
@@ -14,6 +15,7 @@ function Vehicle() {
 	const [mileage, setMileage] = useState<number>(0);
 	const [image, setImage] = useState<string>("");
 	const [lastMaintenanceDate, setLastMaintenanceDate] = useState<string>("");
+	const [state, setState] = useState<number>(0);
 	const [loading, setLoading] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("success");
@@ -33,6 +35,7 @@ function Vehicle() {
 				setMileage(vehicle.data.mileage);
 				setImage(vehicle.data.image);
 				setLastMaintenanceDate(vehicle.data.lastMaintenanceDate);
+				setState(vehicle.data.state);
 			} catch (error) {
 				console.log(error);
 			} finally {
@@ -56,6 +59,7 @@ function Vehicle() {
 			mileage: Number(mileage),
 			image,
 			lastMaintenanceDate,
+			state,
 		};
 
 		try {
@@ -69,7 +73,7 @@ function Vehicle() {
 			setLoading(false);
 		}
 	}
-
+	console.log(state);
 	return (
 		<div>
 			<header className='mb-8'>
@@ -144,6 +148,27 @@ function Vehicle() {
 									value={year}
 									onChange={(e) => setYear(Number(e.target.value))}
 								/>
+							</div>
+
+							<div className='flex flex-col'>
+								<label htmlFor='state' className='font-semibold'>
+									Estado <span className='text-red-600'>*</span>
+								</label>
+								<select
+									id='state'
+									className='input w-full'
+									value={state}
+									onChange={(e) => setState(Number(e.target.value))}
+								>
+									<option value='0' disabled>
+										Selecione um estado
+									</option>
+									{STATES.map((state) => (
+										<option key={state.id} value={state.id}>
+											{state.name} - {state.abbreviation}
+										</option>
+									))}
+								</select>
 							</div>
 
 							<div className='flex flex-col'>

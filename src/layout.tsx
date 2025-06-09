@@ -20,7 +20,7 @@ function Layout() {
 		<div className='drawer lg:drawer-open drawer-overlay'>
 			<input id='main-drawer' type='checkbox' className='drawer-toggle' />
 			<div className='drawer-content'>
-				<main className='max-w-5xl mx-auto p-10'>
+				<main className='w-full mx-auto p-10'>
 					<div className='flex justify-end'>
 						<ThemeController theme={theme} handleTheme={handleTheme} />
 					</div>

@@ -14,14 +14,12 @@ interface CardBodyProps {
 
 function Card({ children }: CardProps) {
 	return (
-		<div className='flex justify-center'>
-			<div className='card card-md bg-base-100 shadow-2xl overflow-hidden w-full'>{children}</div>
-		</div>
+		<div className='card card-md bg-base-100 shadow-2xl overflow-hidden w-full'>{children}</div>
 	);
 }
 
 function Title({ children }: CardTitleProps) {
-	return <div className='flex items-center gap-1.5 bg-primary text-white p-6'>{children}</div>;
+	return <div className='flex items-center gap-1.5 bg-primary text-white p-4'>{children}</div>;
 }
 
 function Body({ children }: CardBodyProps) {
