@@ -8,4 +8,5 @@ export interface UpdateVehicleRequest {
 	mileage: number;
 	image: string;
 	lastMaintenanceDate: string;
+	state: number;
 }

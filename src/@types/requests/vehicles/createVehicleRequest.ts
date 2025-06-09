@@ -7,4 +7,5 @@ export interface CreateVehicleRequest {
 	mileage: number;
 	image: string;
 	lastMaintenanceDate: string;
+	state: number;
 }

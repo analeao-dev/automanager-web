@@ -8,4 +8,5 @@ export interface Vehicle {
 	mileage: number;
 	image: string;
 	lastMaintenanceDate: string;
+	state: number;
 }

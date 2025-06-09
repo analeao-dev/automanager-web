@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { createVehicle } from "../../services/vehicleService";
 import { Alert } from "../../components/alert";
 import Card from "../../components/card";
+import STATES from "../../utils/states";
 
 function Register() {
 	const [type, setType] = useState<number>(0);
@@ -13,6 +14,7 @@ function Register() {
 	const [mileage, setMileage] = useState<number>(0);
 	const [image, setImage] = useState<string>("");
 	const [lastMaintenanceDate, setLastMaintenanceDate] = useState<string>("");
+	const [state, setState] = useState<number>(0);
 	const [loading, setLoading] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("info");
@@ -31,6 +33,7 @@ function Register() {
 			mileage: Number(mileage),
 			image,
 			lastMaintenanceDate,
+			state,
 		};
 
 		if (!newVehicle.type || !newVehicle.plate || !newVehicle.brand || !newVehicle.model) {
@@ -140,6 +143,27 @@ function Register() {
 									value={year}
 									onChange={(e) => setYear(Number(e.target.value))}
 								/>
+							</div>
+
+							<div className='flex flex-col'>
+								<label htmlFor='state' className='font-semibold'>
+									Estado <span className='text-red-600'>*</span>
+								</label>
+								<select
+									id='state'
+									className='input w-full'
+									value={state}
+									onChange={(e) => setState(Number(e.target.value))}
+								>
+									<option value='0' disabled>
+										Selecione um estado
+									</option>
+									{STATES.map((state) => (
+										<option key={state.id} value={state.id}>
+											{state.name} - {state.abbreviation}
+										</option>
+									))}
+								</select>
 							</div>
 
 							<div className='flex flex-col'>
