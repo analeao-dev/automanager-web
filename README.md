@@ -4,7 +4,10 @@
 
 ## 🖼️ Demonstração
 
-![AutoManager Logo](./public/logo.png) <!-- Atualize o caminho se necessário -->
+<div style="display: flex; gap: 10px;">
+  <img src="./public/tela-1.png" alt="Exemplo imagem" width="500">
+  <img src="./public/tela-2.png" alt="Exemplo imagem" width="500">
+</div>
 
 ## 🚀 Funcionalidades
 
