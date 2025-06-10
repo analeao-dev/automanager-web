@@ -15,7 +15,7 @@ function Layout() {
 	const handleTheme = () => {
 		setTheme((prev) => (prev === "light" ? "dark" : "light"));
 	};
-	console.log(theme);
+
 	return (
 		<div className='drawer lg:drawer-open drawer-overlay'>
 			<input id='main-drawer' type='checkbox' className='drawer-toggle' />
@@ -35,7 +35,7 @@ function Layout() {
 			</div>
 			<div className='drawer-side'>
 				<label htmlFor='main-drawer' aria-label='close sidebar' className='drawer-overlay'></label>
-				<nav className='menu bg-secondary border-r-1 border-secondary text-base-content min-h-full w-80 p-4'>
+				<nav className='menu bg-secondary border-r-1 border-secondary text-base-content min-h-full w-72 p-4'>
 					<Link to={"/"}>
 						<img src={Logo} alt='Logo automanager' />
 					</Link>

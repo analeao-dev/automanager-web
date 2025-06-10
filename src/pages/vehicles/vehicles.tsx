@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Vehicle } from "../../@types/vehicle";
-import { deleteVehicle, getVehicles } from "../../services/vehicleService";
-import type { PagedRequest } from "../../@types/requests/pagedResquest";
+import { deleteVehicle, filterVehicles } from "../../services/vehicleService";
 import type { PagedResponse } from "../../@types/responses/pagedResponse";
 import { formattedDate } from "../../utils/formattedDate";
 import { Car, Eye, Filter, SquarePen, Trash } from "lucide-react";
@@ -10,30 +9,41 @@ import Card from "../../components/card";
 import STATES from "../../utils/states";
 import VEHICLE_BRANDS from "../../utils/vehiclesBrands";
 import VEHICLES_TYPES from "../../utils/vehiclesTypes";
+import type { FilterVehicleRequest } from "../../@types/requests/vehicles/filterVehicleRequest";
 
 function Vehicles() {
 	const [vehicles, setVehicles] = useState<PagedResponse<Vehicle[]> | null>(null);
-	const [pagedRequest, setPagedRequest] = useState<PagedRequest>({
+	const [isLoading, setIsLoading] = useState(false);
+	const [filters, setFilters] = useState<FilterVehicleRequest>({
+		model: "",
+		brand: [],
+		state: [],
+		type: [],
 		pageNumber: 1,
 		pageSize: 10,
 	});
 
 	useEffect(() => {
-		const fetchVehicles = async () => {
+		const fetchFilteredVehicles = async () => {
+			setIsLoading(true);
 			try {
-				const response = await getVehicles(pagedRequest);
+				const response = await filterVehicles(filters);
+				console.log(response);
 				setVehicles(response);
 			} catch (error) {
 				console.log(error);
+			} finally {
+				setIsLoading(false);
 			}
 		};
-		fetchVehicles();
-	}, [pagedRequest]);
+
+		fetchFilteredVehicles();
+	}, [filters]);
 
 	async function handleDeleteVehicle(id: number) {
 		try {
 			await deleteVehicle({ id: Number(id) });
-			const response = await getVehicles(pagedRequest);
+			const response = await filterVehicles(filters);
 			setVehicles(response);
 		} catch (error) {
 			console.log(error);
@@ -48,7 +58,7 @@ function Vehicles() {
 					<p>Gerencie e visualize todos os veículos registrados</p>
 				</header>
 			</div>
-			<div className='grid grid-cols-[auto_1fr] gap-6'>
+			<div className='grid grid-cols-[266px_1fr] gap-6'>
 				<div>
 					<Card>
 						<Card.Title>
@@ -57,15 +67,35 @@ function Vehicles() {
 						</Card.Title>
 						<Card.Body>
 							<label className='floating-label'>
-								<input type='text' placeholder='Modelo' className='input input-md' />
+								<input
+									type='text'
+									placeholder='Modelo'
+									className='input input-md'
+									value={filters.model}
+									onChange={(e) => setFilters((prev) => ({ ...prev, model: e.target.value }))}
+								/>
 								<span>Modelo</span>
 							</label>
 							<fieldset className='fieldset bg-base-100 border-base-300 rounded-box border p-4 h-40 overflow-auto'>
 								<legend className='fieldset-legend'>Estados</legend>
 								<div className='grid grid-cols-2 gap-2'>
 									{STATES.map((state) => (
-										<label className='label'>
-											<input id={state.id.toString()} type='checkbox' className='checkbox' />
+										<label className='label' key={state.id}>
+											<input
+												id={`${state.id}-${state.abbreviation}`}
+												type='checkbox'
+												className='checkbox'
+												checked={filters.state.includes(state.id)}
+												onChange={(e) => {
+													const checked = e.target.checked;
+													setFilters((prev) => ({
+														...prev,
+														state: checked
+															? [...prev.state, state.id]
+															: prev.state.filter((id) => id !== state.id),
+													}));
+												}}
+											/>
 											{state.abbreviation}
 										</label>
 									))}
@@ -75,8 +105,22 @@ function Vehicles() {
 								<legend className='fieldset-legend'>Marcas</legend>
 								<div className='grid grid-cols-2 gap-2'>
 									{VEHICLE_BRANDS.map((brand) => (
-										<label className='label'>
-											<input id={brand.id.toString()} type='checkbox' className='checkbox' />
+										<label className='label' key={brand.id}>
+											<input
+												id={`${brand.id}-${brand.brand}`}
+												type='checkbox'
+												className='checkbox'
+												checked={filters.brand.includes(brand.brand)}
+												onChange={(e) => {
+													const checked = e.target.checked;
+													setFilters((prev) => ({
+														...prev,
+														brand: checked
+															? [...prev.brand, brand.brand]
+															: prev.brand.filter((b) => b !== brand.brand),
+													}));
+												}}
+											/>
 											{brand.brand}
 										</label>
 									))}
@@ -86,8 +130,22 @@ function Vehicles() {
 								<legend className='fieldset-legend'>Tipos</legend>
 								<div className='grid grid-cols-2 gap-2'>
 									{VEHICLES_TYPES.map((type) => (
-										<label className='label'>
-											<input id={type.id.toString()} type='checkbox' className='checkbox' />
+										<label className='label' key={type.id}>
+											<input
+												id={`${type.id}`}
+												type='checkbox'
+												className='checkbox'
+												checked={filters.type.includes(type.id)}
+												onChange={(e) => {
+													const checked = e.target.checked;
+													setFilters((prev) => ({
+														...prev,
+														type: checked
+															? [...prev.type, type.id]
+															: prev.type.filter((t) => t !== type.id),
+													}));
+												}}
+											/>
 											{type.label}
 										</label>
 									))}
@@ -122,8 +180,20 @@ function Vehicles() {
 											</tr>
 										</thead>
 										<tbody>
-											{vehicles && vehicles.data.length > 0 ? (
-												vehicles.data.map((vehicle) => (
+											{isLoading ? (
+												<tr>
+													<td colSpan={9} className='text-center text-sm text-gray-500'>
+														Buscando veículos...
+													</td>
+												</tr>
+											) : vehicles && vehicles.data.length === 0 ? (
+												<tr>
+													<td colSpan={9} className='text-center text-sm text-gray-500'>
+														Nenhum veículo encontrado.
+													</td>
+												</tr>
+											) : (
+												vehicles?.data.map((vehicle) => (
 													<tr key={vehicle.id}>
 														<td>{vehicle.model}</td>
 														<td>{vehicle.year}</td>
@@ -171,15 +241,6 @@ function Vehicles() {
 														</td>
 													</tr>
 												))
-											) : (
-												<tr>
-													<td
-														colSpan={8}
-														className='text-secondary font-semibold text-sm text-center'
-													>
-														Nenhum veículo encontrado
-													</td>
-												</tr>
 											)}
 										</tbody>
 										<tfoot>
@@ -203,24 +264,28 @@ function Vehicles() {
 											className='join-item btn'
 											disabled={vehicles?.currentPage === 1}
 											onClick={() =>
-												setPagedRequest((prev) => ({
+												setFilters((prev) => ({
 													...prev,
-													pageNumber: (vehicles?.currentPage ?? 1) - 1,
+													pageNumber: prev.pageNumber - 1,
 												}))
 											}
 										>
 											Anterior
 										</button>
 										<span className='join-item btn btn-disabled'>
-											{vehicles?.currentPage} de {vehicles?.totalCount}
+											{vehicles?.currentPage} de{" "}
+											{Math.ceil((vehicles?.totalCount ?? 1) / (vehicles?.pageSize ?? 10))}
 										</span>
 										<button
 											className='join-item btn'
-											disabled={vehicles?.currentPage === vehicles?.totalCount}
+											disabled={
+												vehicles?.currentPage ===
+												Math.ceil((vehicles?.totalCount ?? 1) / (vehicles?.pageSize ?? 10))
+											}
 											onClick={() =>
-												setPagedRequest((prev) => ({
+												setFilters((prev) => ({
 													...prev,
-													pageNumber: (vehicles?.currentPage ?? 1) + 1,
+													pageNumber: prev.pageNumber + 1,
 												}))
 											}
 										>
