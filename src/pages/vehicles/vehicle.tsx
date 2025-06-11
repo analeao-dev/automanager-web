@@ -4,6 +4,8 @@ import { Car } from "lucide-react";
 import Card from "../../components/card";
 import { getVehicleById, updateVehicle } from "../../services/vehicleService";
 import STATES from "../../utils/states";
+import VEHICLES_TYPES from "../../utils/vehiclesTypes";
+import VEHICLE_BRANDS from "../../utils/vehiclesBrands";
 
 function Vehicle() {
 	const { id } = useParams();
@@ -19,7 +21,7 @@ function Vehicle() {
 	const [loading, setLoading] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertType, setAlertType] = useState<"success" | "error" | "info" | "warning">("success");
-
+	console.log("data: ", lastMaintenanceDate);
 	useEffect(() => {
 		async function getVehicle() {
 			if (!id) return;
@@ -76,8 +78,8 @@ function Vehicle() {
 	console.log(state);
 	return (
 		<div>
-			<header className='mb-8'>
-				<h1 className='text-primary font-semibold text-3xl'>Informações do Veículo</h1>
+			<header className='my-6'>
+				<h1 className='text-primary font-semibold text-2xl'>Informações do Veículo</h1>
 				<p>Gerencie e atualize informações sobre o veículo</p>
 			</header>
 			<Card>
@@ -100,9 +102,11 @@ function Vehicle() {
 									<option value='0' disabled>
 										Selecione o tipo
 									</option>
-									<option value='1'>Motocicleta</option>
-									<option value='2'>Carro</option>
-									<option value='3'>Caminhão</option>
+									{VEHICLES_TYPES.map((type) => (
+										<option key={type.id} value={type.id}>
+											{type.label}
+										</option>
+									))}
 								</select>
 							</div>
 
@@ -119,13 +123,23 @@ function Vehicle() {
 
 							<div className='flex flex-col'>
 								<label htmlFor='brand'>Marca</label>
-								<input
+								<select
 									id='brand'
-									type='text'
-									className='input w-full'
 									value={brand}
+									className='select select-bordered w-full'
 									onChange={(e) => setBrand(e.target.value)}
-								/>
+									required
+								>
+									<option value='' disabled>
+										Selecione a marca
+									</option>
+
+									{VEHICLE_BRANDS.map((brand) => (
+										<option key={brand.id} value={brand.brand}>
+											{brand.brand}
+										</option>
+									))}
+								</select>
 							</div>
 
 							<div className='flex flex-col'>

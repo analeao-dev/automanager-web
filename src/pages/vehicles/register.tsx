@@ -4,6 +4,8 @@ import { createVehicle } from "../../services/vehicleService";
 import { Alert } from "../../components/alert";
 import Card from "../../components/card";
 import STATES from "../../utils/states";
+import VEHICLE_BRANDS from "../../utils/vehiclesBrands";
+import VEHICLES_TYPES from "../../utils/vehiclesTypes";
 
 function Register() {
 	const [type, setType] = useState<number>(0);
@@ -58,14 +60,14 @@ function Register() {
 
 	return (
 		<div>
-			<header className='mb-8'>
-				<h1 className='text-primary font-semibold text-3xl'>Registro de veículos</h1>
+			<header className='my-6'>
+				<h1 className='text-primary font-semibold text-2xl'>Registro de veículos</h1>
 				<p>Registre um novo veículo no sistema</p>
 			</header>
 			<Card>
 				<Card.Title>
-					<Car size={34} />
-					<span className='text-xl font-semibold'>Formulário de Registro</span>
+					<Car size={22} />
+					<span className='text-lg font-semibold'>Formulário de Registro</span>
 				</Card.Title>
 				<Card.Body>
 					{alertMessage && <Alert message={alertMessage} type={alertType} />}
@@ -85,9 +87,11 @@ function Register() {
 									<option value='0' disabled>
 										Selecione o tipo
 									</option>
-									<option value='1'>Motocicleta</option>
-									<option value='2'>Carro</option>
-									<option value='3'>Caminhão</option>
+									{VEHICLES_TYPES.map((type) => (
+										<option key={type.id} value={type.id}>
+											{type.label}
+										</option>
+									))}
 								</select>
 							</div>
 
@@ -109,14 +113,23 @@ function Register() {
 								<label htmlFor='brand' className='font-semibold'>
 									Marca <span className='text-red-600'>*</span>
 								</label>
-								<input
+								<select
 									id='brand'
-									type='text'
-									className='input w-full'
 									value={brand}
+									className='select select-bordered w-full'
 									onChange={(e) => setBrand(e.target.value)}
 									required
-								/>
+								>
+									<option value='' disabled>
+										Selecione a marca
+									</option>
+
+									{VEHICLE_BRANDS.map((brand) => (
+										<option key={brand.id} value={brand.brand}>
+											{brand.brand}
+										</option>
+									))}
+								</select>
 							</div>
 
 							<div className='flex flex-col'>

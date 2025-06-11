@@ -53,12 +53,12 @@ function Vehicles() {
 	return (
 		<>
 			<div>
-				<header className='mb-8'>
-					<h1 className='text-primary font-semibold text-3xl'>Veículos</h1>
+				<header className='my-6'>
+					<h1 className='text-primary font-semibold text-2xl'>Veículos</h1>
 					<p>Gerencie e visualize todos os veículos registrados</p>
 				</header>
 			</div>
-			<div className='grid grid-cols-[266px_1fr] gap-6'>
+			<div className='grid grid-cols-1 md:grid-cols-[256px_1fr] gap-6'>
 				<div>
 					<Card>
 						<Card.Title>
@@ -163,135 +163,137 @@ function Vehicles() {
 							</span>
 						</Card.Title>
 						<Card.Body>
-							<div>
-								<div className='overflow-x-auto'>
-									<table className='table table-sm'>
-										<thead>
+							<div className='overflow-auto'>
+								<table className='table table-sm'>
+									<thead>
+										<tr>
+											<th>Modelo</th>
+											<th>Ano</th>
+											<th>Marca</th>
+											<th>Placa</th>
+											<th>Tipo</th>
+											<th>Estado</th>
+											<th>Data da última manuteção</th>
+											<th>Quilometragem</th>
+											<th>Ações</th>
+										</tr>
+									</thead>
+									<tbody>
+										{isLoading ? (
 											<tr>
-												<th>Modelo</th>
-												<th>Ano</th>
-												<th>Marca</th>
-												<th>Placa</th>
-												<th>Tipo</th>
-												<th>Estado</th>
-												<th>Data da última manuteção</th>
-												<th>Quilometragem</th>
-												<th>Ações</th>
+												<td colSpan={9} className='text-center text-sm text-gray-500'>
+													Buscando veículos...
+												</td>
 											</tr>
-										</thead>
-										<tbody>
-											{isLoading ? (
-												<tr>
-													<td colSpan={9} className='text-center text-sm text-gray-500'>
-														Buscando veículos...
+										) : vehicles && vehicles.data.length === 0 ? (
+											<tr>
+												<td colSpan={9} className='text-center text-sm text-gray-500'>
+													Nenhum veículo encontrado.
+												</td>
+											</tr>
+										) : (
+											vehicles?.data.map((vehicle) => (
+												<tr key={vehicle.id}>
+													<td>{vehicle.model}</td>
+													<td>{vehicle.year}</td>
+													<td>{vehicle.brand}</td>
+													<td>{vehicle.plate}</td>
+													<td>
+														{vehicle.type === 1 ? (
+															<div className='badge badge-soft badge-primary'>Motocicleta</div>
+														) : vehicle.type === 2 ? (
+															<div className='badge badge-soft badge-primary'>Carro</div>
+														) : vehicle.type === 3 ? (
+															<div className='badge badge-soft badge-primary'>Caminhão</div>
+														) : vehicle.type === 4 ? (
+															<div className='badge badge-soft badge-primary'>Van</div>
+														) : (
+															<div className='badge badge-soft badge-primary'>Ônibus</div>
+														)}
+													</td>
+													<td>{STATES.find((state) => state.id === vehicle.state)?.name}</td>
+													<td>{formattedDate(vehicle.lastMaintenanceDate)}</td>
+													<td>{vehicle.mileage} km</td>
+													<td>
+														<div className='flex items-center'>
+															<Link
+																to={`/vehicle/${vehicle.id}`}
+																className='btn btn-xs btn-ghost'
+																type='button'
+																title='Visualizar veículo'
+															>
+																<Eye className='text-info' size={18} />
+															</Link>
+															<Link
+																to={`/vehicle/${vehicle.id}`}
+																className='btn btn-xs btn-ghost'
+																type='button'
+																title='Editar veículo'
+															>
+																<SquarePen className='text-warning' size={18} />
+															</Link>
+															<button
+																className='btn btn-xs btn-ghost'
+																type='button'
+																title='Excluir veículo'
+																onClick={() => handleDeleteVehicle(vehicle.id)}
+															>
+																<Trash className='text-red-600' size={18} />
+															</button>
+														</div>
 													</td>
 												</tr>
-											) : vehicles && vehicles.data.length === 0 ? (
-												<tr>
-													<td colSpan={9} className='text-center text-sm text-gray-500'>
-														Nenhum veículo encontrado.
-													</td>
-												</tr>
-											) : (
-												vehicles?.data.map((vehicle) => (
-													<tr key={vehicle.id}>
-														<td>{vehicle.model}</td>
-														<td>{vehicle.year}</td>
-														<td>{vehicle.brand}</td>
-														<td>{vehicle.plate}</td>
-														<td>
-															{vehicle.type === 1 ? (
-																<div className='badge badge-soft badge-primary'>Motocicleta</div>
-															) : vehicle.type === 2 ? (
-																<div className='badge badge-soft badge-primary'>Carro</div>
-															) : (
-																<div className='badge badge-soft badge-primary'>Caminhão</div>
-															)}
-														</td>
-														<td>{STATES.find((state) => state.id === vehicle.state)?.name}</td>
-														<td>{formattedDate(vehicle.lastMaintenanceDate)}</td>
-														<td>{vehicle.mileage} km</td>
-														<td>
-															<div className='flex items-center'>
-																<Link
-																	to={`/vehicle/${vehicle.id}`}
-																	className='btn btn-xs btn-ghost'
-																	type='button'
-																	title='Visualizar veículo'
-																>
-																	<Eye className='text-info' size={18} />
-																</Link>
-																<Link
-																	to={`/vehicle/${vehicle.id}`}
-																	className='btn btn-xs btn-ghost'
-																	type='button'
-																	title='Editar veículo'
-																>
-																	<SquarePen className='text-warning' size={18} />
-																</Link>
-																<button
-																	className='btn btn-xs btn-ghost'
-																	type='button'
-																	title='Excluir veículo'
-																	onClick={() => handleDeleteVehicle(vehicle.id)}
-																>
-																	<Trash className='text-red-600' size={18} />
-																</button>
-															</div>
-														</td>
-													</tr>
-												))
-											)}
-										</tbody>
-										<tfoot>
-											<tr>
-												<th>Modelo</th>
-												<th>Ano</th>
-												<th>Marca</th>
-												<th>Placa</th>
-												<th>Tipo</th>
-												<th>Estado</th>
-												<th>Data da última manuteção</th>
-												<th>Quilometragem</th>
-												<th>Ações</th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-								<div className='flex justify-end mt-4'>
-									<div className='join'>
-										<button
-											className='join-item btn'
-											disabled={vehicles?.currentPage === 1}
-											onClick={() =>
-												setFilters((prev) => ({
-													...prev,
-													pageNumber: prev.pageNumber - 1,
-												}))
-											}
-										>
-											Anterior
-										</button>
-										<span className='join-item btn btn-disabled'>
-											{vehicles?.currentPage} de{" "}
-											{Math.ceil((vehicles?.totalCount ?? 1) / (vehicles?.pageSize ?? 10))}
-										</span>
-										<button
-											className='join-item btn'
-											disabled={
-												vehicles?.currentPage ===
-												Math.ceil((vehicles?.totalCount ?? 1) / (vehicles?.pageSize ?? 10))
-											}
-											onClick={() =>
-												setFilters((prev) => ({
-													...prev,
-													pageNumber: prev.pageNumber + 1,
-												}))
-											}
-										>
-											Próxima
-										</button>
-									</div>
+											))
+										)}
+									</tbody>
+									<tfoot>
+										<tr>
+											<th>Modelo</th>
+											<th>Ano</th>
+											<th>Marca</th>
+											<th>Placa</th>
+											<th>Tipo</th>
+											<th>Estado</th>
+											<th>Data da última manuteção</th>
+											<th>Quilometragem</th>
+											<th>Ações</th>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+							<div className='flex justify-end mt-4'>
+								<div className='join'>
+									<button
+										className='join-item btn'
+										disabled={vehicles?.currentPage === 1}
+										onClick={() =>
+											setFilters((prev) => ({
+												...prev,
+												pageNumber: prev.pageNumber - 1,
+											}))
+										}
+									>
+										Anterior
+									</button>
+									<span className='join-item btn btn-disabled'>
+										{vehicles?.currentPage} de{" "}
+										{Math.ceil((vehicles?.totalCount ?? 1) / (vehicles?.pageSize ?? 10))}
+									</span>
+									<button
+										className='join-item btn'
+										disabled={
+											vehicles?.currentPage ===
+											Math.ceil((vehicles?.totalCount ?? 1) / (vehicles?.pageSize ?? 10))
+										}
+										onClick={() =>
+											setFilters((prev) => ({
+												...prev,
+												pageNumber: prev.pageNumber + 1,
+											}))
+										}
+									>
+										Próxima
+									</button>
 								</div>
 							</div>
 						</Card.Body>
