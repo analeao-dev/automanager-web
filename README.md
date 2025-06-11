@@ -5,8 +5,8 @@
 ## 🖼️ Demonstração
 
 <div style="display: flex; gap: 10px;">
-  <img src="./public/tela-1.png" alt="Exemplo imagem" width="500">
-  <img src="./public/tela-2.png" alt="Exemplo imagem" width="500">
+  <img src="./public/tela-1.png" alt="Exemplo imagem" width="450">
+  <img src="./public/tela-2.png" alt="Exemplo imagem" width="450">
 </div>
 
 ## 🚀 Funcionalidades
@@ -14,7 +14,8 @@
 - 📋 Listagem de veículos com paginação
 - ➕ Cadastro de novos veículos
 - 🛠️ Edição de veículos existentes
-- 🔍 Visualização de detalhes
+- 🔍 Visualização de
+- 🕵🏻‍♀️ Busca de veículos
 - 🎨 Controle de tema
 
 ## 🛠️ Tecnologias
